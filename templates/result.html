@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ScoreVision - Prediction Result</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+
+            <h1>ScoreVision</h1>
+
+            <p>
+                Predict Performance. Discover Potential.
+            </p>
+
+        </div>
+
+
+        <!-- Result Card -->
+        <div class="card result-card">
+
+            <h2>Prediction Result</h2>
+
+
+            <!-- Predicted Score -->
+            <p>Expected Academic Score</p>
+
+            <div class="score">
+                {{ score }}
+            </div>
+
+
+            <!-- Performance Category -->
+            <p>Performance Category</p>
+
+            <div class="category">
+                {{ category }}
+            </div>
+
+
+            <hr>
+
+
+            <!-- Performance Insight -->
+            <h3>Performance Insight</h3>
+
+
+            {% if category == "Excellent" %}
+
+                <p>
+                    Excellent performance! Keep maintaining your
+                    current academic habits and consistency.
+                </p>
+
+
+            {% elif category == "Good" %}
+
+                <p>
+                    Good performance! With consistent study and
+                    attendance, you can improve even further.
+                </p>
+
+
+            {% elif category == "Average" %}
+
+                <p>
+                    Your performance is average. Increasing study
+                    hours, improving attendance, and focusing on
+                    assignments may help.
+                </p>
+
+
+            {% else %}
+
+                <p>
+                    Additional academic support may be helpful.
+                    Focus on regular study, attendance, assignments,
+                    and exam preparation.
+                </p>
+
+            {% endif %}
+
+
+            <!-- Top Important Factors -->
+            <h3>Top Factors Influencing Prediction</h3>
+
+            <ol>
+
+                {% for feature, importance in top_features %}
+
+                    <li>
+                        {{ feature }}
+                    </li>
+
+                {% endfor %}
+
+            </ol>
+
+
+            <br>
+
+
+            <!-- Back Button -->
+            <a href="/" class="back-button">
+                Predict Another Student
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
