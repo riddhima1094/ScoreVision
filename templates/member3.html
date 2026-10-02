@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ScoreVision | Student Performance Prediction</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='styles.css') }}"
+    >
+</head>
+
+<body>
+
+<header>
+    <div class="logo">ScoreVision</div>
+
+    <div
+        id="nav-actions"
+        style="display:flex;align-items:center;"
+    >
+
+        <a
+            href="/calculator"
+            style="
+                margin-right:15px;
+                color:var(--primary);
+                text-decoration:none;
+                font-weight:600;
+                font-size:0.9rem;
+            "
+        >
+            ⚡ Quick ML Predictor
+        </a>
+
+        <span
+            id="nav-user-info"
+            style="margin-right:15px;font-weight:500;"
+        ></span>
+
+        <button
+            id="logout-btn"
+            class="hidden"
+            style="width:auto;padding:0.5rem 1rem;"
+        >
+            Logout
+        </button>
+
+    </div>
+</header>
+
+
+<div class="container">
+
+    <!-- ================================================= -->
+    <!-- AUTH -->
+    <!-- ================================================= -->
+
+    <div
+        id="auth-view"
+        class="auth-container glass-panel"
+    >
+
+        <div class="auth-tabs">
+
+            <button
+                class="auth-tab active"
+                id="tab-register"
+            >
+                Register
+            </button>
+
+            <button
+                class="auth-tab"
+                id="tab-login"
+            >
+                Login
+            </button>
+
+        </div>
+
+
+        <!-- REGISTER -->
+
+        <form id="register-form">
+
+            <div class="form-group">
+                <label>Full Name / Username</label>
+
+                <input
+                    type="text"
+                    id="reg-name"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    id="reg-email"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    id="reg-password"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label>Role</label>
+
+                <select id="reg-role">
+
+                    <option value="student">
+                        Student
+                    </option>
+
+                    <option value="faculty">
+                        Faculty / Admin
+                    </option>
+
+                </select>
+            </div>
+
+
+            <button type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+
+        <!-- LOGIN -->
+
+        <form
+            id="login-form"
+            class="hidden"
+        >
+
+            <div class="form-group">
+                <label>Email</label>
+
+                <input
+                    type="text"
+                    id="login-email"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    id="login-password"
+                    required
+                >
+            </div>
+
+
+            <button type="submit">
+                Sign In
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- STUDENT DASHBOARD -->
+    <!-- ================================================= -->
+
+    <div
+        id="student-dashboard"
+        class="hidden"
+    >
+
+        <!-- STUDENT NAV -->
+
+        <div
+            style="
+                display:flex;
+                gap:1rem;
+                margin-bottom:2rem;
+                overflow-x:auto;
+            "
+        >
+
+            <button
+                id="nav-s-dashboard"
+                class="btn-secondary"
+                style="width:auto;white-space:nowrap;"
+            >
+                Dashboard
+            </button>
+
+
+            <button
+                id="nav-s-lectures"
+                class="btn-secondary"
+                style="width:auto;white-space:nowrap;"
+            >
+                Lectures
+            </button>
+
+
+            <button
+                id="nav-s-tests"
+                class="btn-secondary"
+                style="width:auto;white-space:nowrap;"
+            >
+                Tests
+            </button>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- STUDENT OVERVIEW -->
+        <!-- ================================================= -->
+
+        <div id="s-view-dashboard">
+
+            <div class="dashboard-grid">
+
+                <div
+                    class="glass-panel"
+                    id="student-academic-view"
+                >
+
+                    <h2>
+                        My Academic Data
+                    </h2>
+
+                    <div
+                        id="s-readonly-data"
+                        style="
+                            margin-top:1rem;
+                            color:#64748b;
+                        "
+                    >
+                        Loading data...
+                    </div>
+
+                </div>
+
+
+                <div
+                    style="
+                        display:flex;
+                        flex-direction:column;
+                        gap:1.5rem;
+                    "
+                >
+
+                    <!-- LATEST PREDICTION -->
+
+                    <div
+                        class="glass-panel stat-card"
+                        id="latest-prediction"
+                    >
+
+                        <h2>
+                            Latest Prediction
+                        </h2>
+
+                        <div
+                            class="stat-value"
+                            id="pred-score"
+                        >
+                            --
+                        </div>
+
+                        <span
+                            class="badge"
+                            id="pred-category"
+                            style="display:none;"
+                        >
+                            --
+                        </span>
+
+                    </div>
+
+
+                    <!-- PREDICTION HISTORY -->
+
+                    <div class="glass-panel">
+
+                        <h2>
+                            Prediction History
+                        </h2>
+
+                        <div
+                            class="list-container"
+                            id="history-list"
+                        >
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- STUDENT LECTURES -->
+        <!-- ================================================= -->
+
+        <div
+            id="s-view-lectures"
+            class="hidden"
+        >
+
+            <div class="glass-panel">
+
+                <h2>
+                    Available Lectures
+                </h2>
+
+                <div
+                    class="list-container"
+                    id="s-lectures-list"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- STUDENT TESTS -->
+        <!-- ================================================= -->
+
+        <div
+            id="s-view-tests"
+            class="hidden"
+        >
+
+            <!-- TEST LIST -->
+
+            <div
+                class="glass-panel"
+                id="s-test-list-view"
+            >
+
+                <h2>
+                    Available Tests
+                </h2>
+
+                <p
+                    style="
+                        color:#64748b;
+                        margin-bottom:1rem;
+                    "
+                >
+                    Each test can be attempted only once.
+                </p>
+
+
+                <div
+                    class="list-container"
+                    id="s-tests-list"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- TAKE TEST -->
+
+            <div
+                class="glass-panel hidden"
+                id="s-take-test-view"
+            >
+
+                <button
+                    class="btn-secondary"
+                    id="btn-back-tests"
+                    style="
+                        width:auto;
+                        margin-bottom:1rem;
+                    "
+                >
+                    ← Back to Tests
+                </button>
+
+
+                <h2 id="take-test-title">
+                    Test Title
+                </h2>
+
+
+                <!-- TIMER -->
+
+                <div
+                    id="test-timer-container"
+                    class="badge"
+                    style="
+                        display:none;
+                        font-size:1.1rem;
+                        padding:0.5rem;
+                        margin-bottom:1rem;
+                        background-color:var(--primary);
+                        color:white;
+                    "
+                >
+
+                    Time Remaining:
+
+                    <span id="test-timer">
+                        --:--
+                    </span>
+
+                </div>
+
+
+                <!-- TEST FORM -->
+
+                <form
+                    id="take-test-form"
+                    style="margin-top:1rem;"
+                >
+
+                    <div
+                        id="take-test-questions"
+                    >
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        style="margin-top:2rem;"
+                    >
+                        Submit Test
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ADMIN / FACULTY DASHBOARD -->
+    <!-- ================================================= -->
+
+    <div
+        id="admin-dashboard"
+        class="hidden"
+    >
+
+        <!-- ADMIN NAV -->
+
+        <div
+            style="
+                display:flex;
+                gap:1rem;
+                margin-bottom:2rem;
+                overflow-x:auto;
+            "
+        >
+
+            <button
+                id="nav-a-dashboard"
+                class="btn-secondary"
+                style="
+                    width:auto;
+                    white-space:nowrap;
+                "
+            >
+                Overview
+            </button>
+
+
+            <button
+                id="nav-a-directory"
+                class="btn-secondary"
+                style="
+                    width:auto;
+                    white-space:nowrap;
+                "
+            >
+                Student Directory
+            </button>
+
+
+            <button
+                id="nav-a-lectures"
+                class="btn-secondary"
+                style="
+                    width:auto;
+                    white-space:nowrap;
+                "
+            >
+                Manage Lectures
+            </button>
+
+
+            <button
+                id="nav-a-tests"
+                class="btn-secondary"
+                style="
+                    width:auto;
+                    white-space:nowrap;
+                "
+            >
+                Manage Tests
+            </button>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- ADMIN OVERVIEW -->
+        <!-- ================================================= -->
+
+        <div id="a-view-dashboard">
+
+            <h2>
+                Platform Overview
+            </h2>
+
+
+            <div
+                class="dashboard-grid"
+                style="margin-top:1rem;"
+            >
+
+                <div
+                    class="glass-panel stat-card"
+                >
+
+                    <h3>
+                        Total Students
+                    </h3>
+
+                    <div
+                        class="stat-value"
+                        id="ad-students"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="glass-panel stat-card"
+                >
+
+                    <h3>
+                        Total Predictions
+                    </h3>
+
+                    <div
+                        class="stat-value"
+                        id="ad-preds"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="glass-panel stat-card"
+                >
+
+                    <h3>
+                        Pass Rate
+                    </h3>
+
+                    <div
+                        class="stat-value"
+                        id="ad-pass"
+                    >
+                        0%
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- OVERRIDE SCORE -->
+
+            <div
+                class="glass-panel"
+                style="margin-top:1rem;"
+            >
+
+                <h3>
+                    Override Student Test Score
+                </h3>
+
+
+                <form
+                    id="override-score-form"
+                    style="
+                        display:flex;
+                        gap:1rem;
+                        align-items:flex-end;
+                        margin-top:1rem;
+                        flex-wrap:wrap;
+                    "
+                >
+
+                    <div
+                        class="form-group"
+                        style="margin-bottom:0;"
+                    >
+
+                        <label>
+                            Student ID
+                        </label>
+
+                        <input
+                            type="number"
+                            id="ov-student"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div
+                        class="form-group"
+                        style="margin-bottom:0;"
+                    >
+
+                        <label>
+                            Submission ID
+                        </label>
+
+                        <input
+                            type="number"
+                            id="ov-submission"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div
+                        class="form-group"
+                        style="margin-bottom:0;"
+                    >
+
+                        <label>
+                            New Score
+                        </label>
+
+                        <input
+                            type="number"
+                            id="ov-score"
+                            step="0.1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        style="width:auto;"
+                    >
+                        Update Score
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- ADMIN LECTURES -->
+        <!-- ================================================= -->
+
+        <div
+            id="a-view-lectures"
+            class="hidden"
+        >
+
+            <div class="dashboard-grid">
+
+                <!-- ADD LECTURE -->
+
+                <div class="glass-panel">
+
+                    <h2>
+                        Post a Lecture
+                    </h2>
+
+
+                    <form
+                        id="add-lecture-form"
+                        style="margin-top:1rem;"
+                    >
+
+                        <div class="form-group">
+
+                            <label>
+                                Title
+                            </label>
+
+                            <input
+                                type="text"
+                                id="lec-title"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Description
+                            </label>
+
+                            <textarea
+                                id="lec-desc"
+                                rows="3"
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Link (URL)
+                            </label>
+
+                            <input
+                                type="url"
+                                id="lec-link"
+                                required
+                            >
+
+                        </div>
+
+
+                        <button type="submit">
+                            Post Lecture
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <!-- LECTURE LIST -->
+
+                <div class="glass-panel">
+
+                    <h2>
+                        Recent Lectures
+                    </h2>
+
+                    <div
+                        class="list-container"
+                        id="a-lectures-list"
+                    >
+                        Loading...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- STUDENT DIRECTORY -->
+        <!-- ================================================= -->
+
+        <div
+            id="a-view-directory"
+            class="hidden"
+        >
+
+            <!-- DIRECTORY LIST -->
+
+            <div
+                class="glass-panel"
+                id="a-dir-list-view"
+            >
+
+                <h2>
+                    Student Directory
+                </h2>
+
+                <p
+                    style="
+                        color:#64748b;
+                        margin-bottom:1rem;
+                    "
+                >
+                    Select a student to update their records.
+                </p>
+
+
+                <div
+                    class="list-container"
+                    id="a-students-list"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- EDIT STUDENT -->
+
+            <div
+                class="glass-panel hidden"
+                id="a-dir-edit-view"
+            >
+
+                <button
+                    class="btn-secondary"
+                    id="btn-back-dir"
+                    style="
+                        width:auto;
+                        margin-bottom:1rem;
+                    "
+                >
+                    ← Back to Directory
+                </button>
+
+
+                <h2>
+                    Update Data for:
+
+                    <span
+                        id="edit-student-name"
+                        style="color:var(--primary);"
+                    >
+                    </span>
+                </h2>
+
+
+                <form
+                    id="edit-academic-form"
+                    style="margin-top:1rem;"
+                >
+
+                    <!-- STUDENT TEST SCORES -->
+
+                    <div
+                        class="glass-panel"
+                        style="margin-top:1.5rem;"
+                    >
+
+                        <h2>
+                            Student Test Scores
+                        </h2>
+
+                        <div
+                            id="student-test-scores"
+                            class="list-container"
+                        >
+                            Loading test scores...
+                        </div>
+
+                    </div>
+
+
+                    <input
+                        type="hidden"
+                        id="edit-s-id"
+                    >
+
+                    <input
+                        type="hidden"
+                        id="edit-record-id"
+                    >
+
+
+                    <!-- ACADEMIC FIELDS -->
+
+                    <div
+                        class="dashboard-grid"
+                        style="
+                            grid-template-columns:1fr 1fr;
+                            gap:1rem;
+                            margin-top:1.5rem;
+                        "
+                    >
+
+                        <div class="form-group">
+
+                            <label>
+                                Attendance %
+                            </label>
+
+                            <input
+                                type="number"
+                                id="e-attendance"
+                                min="0"
+                                max="100"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Study Hours
+                            </label>
+
+                            <input
+                                type="number"
+                                id="e-study"
+                                min="0"
+                                step="0.1"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Previous Exam Score
+                            </label>
+
+                            <input
+                                type="number"
+                                id="e-prev"
+                                min="0"
+                                max="100"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Assignment Marks
+                            </label>
+
+                            <input
+                                type="number"
+                                id="e-assignment"
+                                min="0"
+                                max="100"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Internal Assessment
+                            </label>
+
+                            <input
+                                type="number"
+                                id="e-internal"
+                                min="0"
+                                max="100"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Class Participation
+                            </label>
+
+                            <input
+                                type="number"
+                                id="e-participation"
+                                min="0"
+                                max="100"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Sleep Hours
+                            </label>
+
+                            <input
+                                type="number"
+                                id="e-sleep"
+                                min="0"
+                                step="0.1"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Extracurricular
+                            </label>
+
+                            <select id="e-extra">
+
+                                <option value="none">
+                                    None
+                                </option>
+
+                                <option value="low">
+                                    Low
+                                </option>
+
+                                <option value="medium">
+                                    Medium
+                                </option>
+
+                                <option value="high">
+                                    High
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- STUDENT ACTIONS -->
+
+                    <div
+                        style="
+                            display:flex;
+                            gap:1rem;
+                            margin-top:1.5rem;
+                            flex-wrap:wrap;
+                        "
+                    >
+
+                        <button
+                            type="submit"
+                            style="flex:2;"
+                        >
+                            Update & Generate Prediction
+                        </button>
+
+
+                        <button
+                            type="button"
+                            id="btn-clear-academic"
+                            class="btn-secondary"
+                            style="flex:1;"
+                        >
+                            Clear Records
+                        </button>
+
+
+                        <button
+                            type="button"
+                            id="btn-delete-student"
+                            class="btn-danger"
+                            style="flex:1;"
+                        >
+                            Delete Student
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- ADMIN TESTS -->
+        <!-- ================================================= -->
+
+        <div
+            id="a-view-tests"
+            class="hidden"
+        >
+
+            <div class="dashboard-grid">
+
+                <!-- CREATE TEST -->
+
+                <div class="glass-panel">
+
+                    <h2>
+                        Create a New Test
+                    </h2>
+
+
+                    <form
+                        id="create-test-form"
+                        style="margin-top:1rem;"
+                    >
+
+                        <div class="form-group">
+
+                            <label>
+                                Test Title
+                            </label>
+
+                            <input
+                                type="text"
+                                id="t-title"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Description
+                            </label>
+
+                            <textarea
+                                id="t-desc"
+                                rows="2"
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Time Limit (Minutes) - Optional
+                            </label>
+
+                            <input
+                                type="number"
+                                id="t-duration"
+                                min="1"
+                                placeholder="e.g. 30"
+                            >
+
+                        </div>
+
+
+                        <!-- QUESTIONS -->
+
+                        <div id="questions-builder">
+
+                            <h3
+                                style="
+                                    margin:1.5rem 0 1rem;
+                                    border-bottom:1px solid #cbd5e1;
+                                    padding-bottom:0.5rem;
+                                "
+                            >
+                                Questions
+                            </h3>
+
+
+                            <div id="q-list">
+                            </div>
+
+
+                            <button
+                                type="button"
+                                class="btn-secondary"
+                                id="btn-add-q"
+                                style="margin-bottom:1.5rem;"
+                            >
+                                + Add Question
+                            </button>
+
+                        </div>
+
+
+                        <button type="submit">
+                            Create Test
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <!-- CREATED TESTS -->
+
+                <div class="glass-panel">
+
+                    <h2>
+                        Created Tests
+                    </h2>
+
+
+                    <div
+                        class="list-container"
+                        id="a-tests-list"
+                    >
+                        Loading tests...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- TOAST -->
+<!-- ================================================= -->
+
+<div id="toast-container"></div>
+
+
+<!-- APP JS -->
+
+<script
+    src="{{ url_for('static', filename='app.js') }}"
+></script>
+
+</body>
+</html>
