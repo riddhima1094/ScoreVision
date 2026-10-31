@@ -42,8 +42,6 @@ def calculate_dummy_score(record: AcademicRecord) -> float:
     elif record.extracurricular_involvement == "medium":
         bonus += 1
         
-    if 6 <= float(record.sleep_hours) <= 9:
-        bonus += 2
         
     predicted_score += bonus
     return min(round(predicted_score, 2), 100.0)
@@ -62,7 +60,6 @@ def predict_performance(record: AcademicRecord, age: float = 20.0) -> float:
                 "assignment_marks": float(record.assignment_marks),
                 "internal_marks": float(record.internal_assessment_marks),
                 "participation": float(record.class_participation),
-                "sleep_hours": float(record.sleep_hours),
                 "extracurricular": extra_val
             }])
             score = float(ml_model.predict(df)[0])
@@ -226,7 +223,6 @@ def create_academic_record():
         assignments = data.get("assignment_marks")
         internal = data.get("internal_assessment_marks")
         participation = data.get("class_participation")
-        sleep = data.get("sleep_hours")
         extracurricular = data.get("extracurricular_involvement")
 
         # Validate that all required fields are present
@@ -237,7 +233,6 @@ def create_academic_record():
             ("assignment_marks", assignments),
             ("internal_assessment_marks", internal),
             ("class_participation", participation),
-            ("sleep_hours", sleep),
             ("extracurricular_involvement", extracurricular)
         ]
 
@@ -254,7 +249,6 @@ def create_academic_record():
             assignment_marks=assignments,
             internal_assessment_marks=internal,
             class_participation=participation,
-            sleep_hours=sleep,
             extracurricular_involvement=extracurricular
         )
 

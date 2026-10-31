@@ -5,7 +5,15 @@ const authView = document.getElementById('auth-view');
 const studentDashboard = document.getElementById('student-dashboard');
 const adminDashboard = document.getElementById('admin-dashboard');
 const logoutBtn = document.getElementById('logout-btn');
+const homeBtn = document.getElementById('home-btn');
+const logoHome = document.getElementById('logo-home');
+const btnReturnDashboard = document.getElementById('btn-return-dashboard');
+const activeSessionBanner = document.getElementById('active-session-banner');
+const activeSessionUser = document.getElementById('active-session-user');
 const navUserInfo = document.getElementById('nav-user-info');
+const switchRoleBtn = document.getElementById('switch-role-btn');
+const btnQuickStudent = document.getElementById('btn-quick-student');
+const btnQuickAdmin = document.getElementById('btn-quick-admin');
 
 // UI State
 function showView(view) {
@@ -13,21 +21,41 @@ function showView(view) {
     studentDashboard.classList.add('hidden');
     adminDashboard.classList.add('hidden');
     logoutBtn.classList.add('hidden');
+    if (homeBtn) homeBtn.classList.add('hidden');
+    if (switchRoleBtn) switchRoleBtn.classList.add('hidden');
     navUserInfo.textContent = '';
 
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
-        navUserInfo.textContent = `${user.name} (${user.role.toUpperCase()})`;
+        navUserInfo.textContent = `${user.name} [${user.role.toUpperCase()}]`;
     }
 
-    if (view === 'auth') authView.classList.remove('hidden');
+    if (view === 'auth') {
+        authView.classList.remove('hidden');
+        if (activeSessionBanner && user) {
+            activeSessionBanner.classList.remove('hidden');
+            if (activeSessionUser) activeSessionUser.textContent = `${user.name} [${user.role.toUpperCase()}]`;
+        } else if (activeSessionBanner) {
+            activeSessionBanner.classList.add('hidden');
+        }
+    }
     if (view === 'student') {
         studentDashboard.classList.remove('hidden');
         logoutBtn.classList.remove('hidden');
+        if (homeBtn) homeBtn.classList.remove('hidden');
+        if (switchRoleBtn) {
+            switchRoleBtn.innerHTML = '👨‍🏫 Switch to Admin Dashboard';
+            switchRoleBtn.classList.remove('hidden');
+        }
     }
     if (view === 'admin') {
         adminDashboard.classList.remove('hidden');
         logoutBtn.classList.remove('hidden');
+        if (homeBtn) homeBtn.classList.remove('hidden');
+        if (switchRoleBtn) {
+            switchRoleBtn.innerHTML = '🎓 Switch to Student Dashboard';
+            switchRoleBtn.classList.remove('hidden');
+        }
     }
 }
 
@@ -182,7 +210,6 @@ async function loadStudentData() {
                     <div><strong>Assignment Marks:</strong> ${data.assignment_marks}%</div>
                     <div><strong>Internal Assessment:</strong> ${data.internal_assessment_marks}%</div>
                     <div><strong>Participation:</strong> ${data.class_participation}%</div>
-                    <div><strong>Sleep Hours:</strong> ${data.sleep_hours}h</div>
                     <div><strong>Extracurricular:</strong> <span style="text-transform:capitalize;">${data.extracurricular_involvement}</span></div>
                 </div>
                 <p style="margin-top: 1rem; font-size: 0.85rem;">Note: This data is managed by Faculty.</p>
@@ -1031,7 +1058,6 @@ function openEditStudent(id) {
     document.getElementById('e-assignment').value = record.assignment_marks || 0;
     document.getElementById('e-internal').value = record.internal_assessment_marks || 0;
     document.getElementById('e-participation').value = record.class_participation || 0;
-    document.getElementById('e-sleep').value = record.sleep_hours || 0;
     document.getElementById('e-extra').value = record.extracurricular_involvement || 'none';
     loadStudentTestScores(student.id);
 
@@ -1081,7 +1107,6 @@ document.getElementById('edit-academic-form').addEventListener('submit', async (
         assignment_marks: parseFloat(document.getElementById('e-assignment').value),
         internal_assessment_marks: parseFloat(document.getElementById('e-internal').value),
         class_participation: parseFloat(document.getElementById('e-participation').value),
-        sleep_hours: parseFloat(document.getElementById('e-sleep').value),
         extracurricular_involvement: document.getElementById('e-extra').value
     };
 
@@ -1392,3 +1417,54 @@ async function deleteTest(id) {
 // Boot
 if (localStorage.getItem('token')) initDashboard(); else showView('auth');
 
+
+
+// Quick Demo Login & Role Switching
+async function quickDemoLogin(role) {
+    const creds = role === 'admin' 
+        ? { email: 'admin@scorevision.com', password: '123456' }
+        : { email: 'puja@07gmail.com', password: '123456' };
+    try {
+        const data = await apiCall('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify(creds)
+        });
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        showToast(`Logged in as ${data.user.role.toUpperCase()} (${data.user.name})`);
+        initDashboard();
+    } catch (e) {
+        showToast('Login failed: ' + (e.message || e), 'error');
+    }
+}
+
+if (btnQuickStudent) {
+    btnQuickStudent.addEventListener('click', () => quickDemoLogin('student'));
+}
+if (btnQuickAdmin) {
+    btnQuickAdmin.addEventListener('click', () => quickDemoLogin('admin'));
+}
+if (switchRoleBtn) {
+    switchRoleBtn.addEventListener('click', () => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const nextRole = (user && user.role === 'student') ? 'admin' : 'student';
+        quickDemoLogin(nextRole);
+    });
+}
+
+
+if (homeBtn) {
+    homeBtn.addEventListener('click', () => {
+        showView('auth');
+    });
+}
+if (logoHome) {
+    logoHome.addEventListener('click', () => {
+        showView('auth');
+    });
+}
+if (btnReturnDashboard) {
+    btnReturnDashboard.addEventListener('click', () => {
+        initDashboard();
+    });
+}

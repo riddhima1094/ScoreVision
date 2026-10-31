@@ -20,7 +20,7 @@
 <body>
 
 <header>
-    <div class="logo">ScoreVision</div>
+    <div class="logo" id="logo-home" style="cursor:pointer;" title="Go to Home">ScoreVision</div>
 
     <div
         id="nav-actions"
@@ -46,6 +46,49 @@
         ></span>
 
         <button
+            id="home-btn"
+            class="hidden"
+            style="
+                width:auto;
+                padding:0.4rem 0.85rem;
+                margin-right:10px;
+                background:#ffffff;
+                color:#334155;
+                border:1px solid #cbd5e1;
+                border-radius:6px;
+                font-size:0.85rem;
+                font-weight:600;
+                cursor:pointer;
+                display:inline-flex;
+                align-items:center;
+                gap:5px;
+                transition:all 0.2s;
+            "
+        >
+            🏠 Home
+        </button>
+
+        <button
+            id="switch-role-btn"
+            class="hidden"
+            style="
+                width:auto;
+                padding:0.4rem 0.85rem;
+                margin-right:12px;
+                background:#eff6ff;
+                color:#1d4ed8;
+                border:1px solid #bfdbfe;
+                border-radius:6px;
+                font-size:0.85rem;
+                font-weight:600;
+                cursor:pointer;
+                transition:all 0.2s;
+            "
+        >
+            🔄 Switch Dashboard
+        </button>
+
+        <button
             id="logout-btn"
             class="hidden"
             style="width:auto;padding:0.5rem 1rem;"
@@ -68,17 +111,48 @@
         class="auth-container glass-panel"
     >
 
+        <!-- ACTIVE SESSION BANNER -->
+        <div id="active-session-banner" class="hidden" style="margin-bottom: 1.25rem; padding: 0.75rem 1rem; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.85rem; color: #065f46; font-weight: 500;">
+                Logged in as: <strong id="active-session-user"></strong>
+            </span>
+            <button type="button" id="btn-return-dashboard" style="background: #059669; color: white; border: none; padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; cursor: pointer;">
+                Go to Dashboard →
+            </button>
+        </div>
+
+        <!-- QUICK DEMO PREVIEW -->
+        <div style="margin-bottom: 1.5rem; padding: 1.1rem; background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); border: 1.5px dashed #93c5fd; border-radius: 10px;">
+            <p style="font-size: 0.95rem; font-weight: 700; color: #1e3a8a; margin-bottom: 0.3rem; text-align: center;">
+                🚀 Quick Dashboard Access
+            </p>
+            <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.8rem; text-align: center;">
+                Click below to instantly open either dashboard:
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <button type="button" id="btn-quick-student" style="background: #2563eb; color: white; border: none; padding: 0.65rem 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(37,99,235,0.25);">
+                    🎓 Student Dashboard
+                </button>
+                <button type="button" id="btn-quick-admin" style="background: #7c3aed; color: white; border: none; padding: 0.65rem 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(124,58,237,0.25);">
+                    👨‍🏫 Admin Dashboard
+                </button>
+            </div>
+            <div style="font-size: 0.72rem; color: #475569; margin-top: 0.65rem; background: white; padding: 0.45rem; border-radius: 6px; border: 1px solid #e2e8f0; text-align: center;">
+                <strong>Demo:</strong> Student: <code>puja@07gmail.com</code> | Admin: <code>admin@scorevision.com</code> (Pass: <code>123456</code>)
+            </div>
+        </div>
+
         <div class="auth-tabs">
 
             <button
-                class="auth-tab active"
+                class="auth-tab"
                 id="tab-register"
             >
                 Register
             </button>
 
             <button
-                class="auth-tab"
+                class="auth-tab active"
                 id="tab-login"
             >
                 Login
@@ -89,7 +163,7 @@
 
         <!-- REGISTER -->
 
-        <form id="register-form">
+        <form id="register-form" class="hidden">
 
             <div class="form-group">
                 <label>Full Name / Username</label>
@@ -134,7 +208,10 @@
                     </option>
 
                     <option value="faculty">
-                        Faculty / Admin
+                        Faculty
+                    </option>
+                    <option value="admin">
+                        Administrator
                     </option>
 
                 </select>
@@ -152,7 +229,6 @@
 
         <form
             id="login-form"
-            class="hidden"
         >
 
             <div class="form-group">
@@ -1023,21 +1099,7 @@
                         </div>
 
 
-                        <div class="form-group">
-
-                            <label>
-                                Sleep Hours
-                            </label>
-
-                            <input
-                                type="number"
-                                id="e-sleep"
-                                min="0"
-                                step="0.1"
-                                required
-                            >
-
-                        </div>
+                        
 
 
                         <div class="form-group">

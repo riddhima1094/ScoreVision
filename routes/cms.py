@@ -715,7 +715,6 @@ def override_academic_record(
         "assignment_marks",
         "internal_assessment_marks",
         "class_participation",
-        "sleep_hours",
         "extracurricular_involvement"
     ]
 
@@ -869,12 +868,6 @@ def update_student_academic(student_id):
                 )
             ),
 
-            sleep_hours=float(
-                data.get(
-                    "sleep_hours",
-                    0
-                )
-            ),
 
             extracurricular_involvement=data.get(
                 "extracurricular_involvement",

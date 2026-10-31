@@ -127,7 +127,6 @@ feature_names = [
     "Assignment Marks",
     "Internal Marks",
     "Class Participation",
-    "Sleep Hours",
     "Extracurricular Activity"
 ]
 
@@ -202,9 +201,6 @@ def predict():
             request.form["participation"]
         )
 
-        sleep_hours = float(
-            request.form["sleep_hours"]
-        )
 
         extracurricular = int(
             request.form["extracurricular"]
@@ -231,7 +227,6 @@ def predict():
 
             "participation": [participation],
 
-            "sleep_hours": [sleep_hours],
 
             "extracurricular": [extracurricular]
 

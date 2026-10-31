@@ -22,7 +22,7 @@ class AcademicRecord(db.Model):
     assignment_marks = db.Column(db.Float, nullable=False)
     internal_assessment_marks = db.Column(db.Float, nullable=False)
     class_participation = db.Column(db.Float, nullable=False)
-    sleep_hours = db.Column(db.Float, nullable=False)
+    sleep_hours = db.Column(db.Float, nullable=True, default=7.0)
     extracurricular_involvement = db.Column(db.String(20), nullable=False)
     
     created_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
@@ -34,7 +34,7 @@ class AcademicRecord(db.Model):
     def __init__(self, user_id: int, attendance_percentage: float, study_hours: float,
                  previous_exam_score: float, assignment_marks: float,
                  internal_assessment_marks: float, class_participation: float,
-                 sleep_hours: float, extracurricular_involvement: str):
+                 extracurricular_involvement: str, sleep_hours: float = 7.0):
         self.user_id = user_id
         # Use property setters / validates to enforce rules
         self.attendance_percentage = attendance_percentage
@@ -57,7 +57,7 @@ class AcademicRecord(db.Model):
             raise ValueError(f"{key} must be between 0 and 100. Received: {value}")
         return val
 
-    @validates("study_hours", "sleep_hours")
+    @validates("study_hours")
     def validate_hours(self, key, value):
         """Validate that hours fields are non-negative."""
         try:
